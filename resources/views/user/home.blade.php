@@ -60,6 +60,62 @@
     </div>
 </section>
 
+<!-- 🧑‍💻 Tim Kreatif -->
+<section class="my-5 text-center">
+    <div class="container">
+        <h2 class="fw-bold mb-4">
+            <i class="bi bi-people text-primary"></i> Tim <span class="text-primary">Kreatif</span>
+        </h2>
+        <p class="text-muted mb-5">Orang-orang hebat di balik website galeri digital Yonsei.</p>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold">Liandra Z. P.</h5>
+                        <p class="text-muted">Web Developer</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 🗓️ Agenda Terbaru -->
+<section id="agenda" class="my-5 bg-light py-5">
+    <div class="container">
+        <h2 class="fw-bold text-center mb-4">
+            <i class="bi bi-calendar-event text-primary"></i> Agenda <span class="text-primary">Terbaru</span>
+        </h2>
+
+        <div class="row g-4">
+            @forelse($agendas as $agenda)
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="fw-bold text-dark">{{ $agenda->judul }}</h5>
+                            <p class="text-muted mb-1">
+                                <i class="bi bi-clock"></i> {{ \Carbon\Carbon::parse($agenda->tanggal)->translatedFormat('d F Y') }}
+                            </p>
+                            <p class="small text-secondary">{{ Str::limit($agenda->deskripsi, 80) }}</p>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="text-center text-muted">Belum ada agenda terbaru.</div>
+            @endforelse
+        </div>
+
+        @if($agendas->count() > 0)
+            <div class="text-center mt-4">
+                <a href="{{ route('agenda.index') }}" class="btn btn-primary">
+                    <i class="bi bi-calendar-week"></i> Lihat Semua Agenda
+                </a>
+            </div>
+        @endif
+    </div>
+</section>
+
 <!-- Galeri Preview -->
 <section id="galeri" class="my-5">
     <div class="container">
@@ -69,18 +125,10 @@
                 @include('user.partials.foto-card', ['f' => $f])
             @endforeach
         </div>
-
-        @if($foto->count() >= 6)
-        <div class="text-center mt-4">
-            <a href="{{ route('galeri') }}" class="btn btn-outline-primary">
-                <i class="bi bi-images"></i> Lihat Semua Galeri
-            </a>
-        </div>
-        @endif
     </div>
 </section>
 
-<!-- Komentar -->
+<!-- 💬 Komentar -->
 <section class="my-5">
     <div class="container">
         <h3 class="fw-bold mb-3 text-center">💬 Tinggalkan Komentar</h3>
@@ -121,105 +169,47 @@
         </div>
     </div>
 </section>
+
+<!-- 📊 Statistik Sekolah -->
+<section class="py-5 text-center" style="background-color: #195087; color: white;">
+    <div class="container">
+        <h2 class="fw-bold mb-4">
+            <i class="bi bi-bar-chart-line"></i> Statistik <span class="text-warning">Yonsei</span>
+        </h2>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-3">
+                <div class="p-4 bg-white bg-opacity-25 rounded-4 shadow-sm">
+                    <h3 class="fw-bold text-warning mb-0">{{ $totalFoto }}</h3>
+                    <p class="mb-0">Foto Tersimpan</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-4 bg-white bg-opacity-25 rounded-4 shadow-sm">
+                    <h3 class="fw-bold text-warning mb-0">{{ $totalAgenda }}</h3>
+                    <p class="mb-0">Agenda Sekolah</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-4 bg-white bg-opacity-25 rounded-4 shadow-sm">
+                    <h3 class="fw-bold text-warning mb-0">{{ $totalKomentar }}</h3>
+                    <p class="mb-0">Komentar Positif</p>
+                </div>
+            </div>
+        </div>
+        <p class="mt-4 fst-italic opacity-75 text-light">“Setiap angka adalah cerita dari perjalanan Yonsei yang terus berkembang.”</p>
+    </div>
+</section>
+
+<!-- 🌟 CTA Penutup -->
+<section class="py-5 text-center" style="color: #000;">
+    <div class="container">
+        <h2 class="fw-bold mb-3">Bergabunglah dengan Kami di <span style="color: #195087;">Yonsei</span>!</h2>
+        <p class="fs-5 text-muted">Mari terus abadikan setiap momen berharga sekolah kita.</p>
+        <a href="{{ route('galeri') }}" 
+           class="btn btn-lg shadow-sm mt-2 fw-semibold"
+           style="background-color: #195087; color: white; border: none;">
+            <i class="bi bi-camera"></i> Lihat Semua Galeri
+        </a>
+    </div>
+</section>
 @endsection
-
-@push('styles')
-<!-- GLightbox CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
-<style>
-html { scroll-behavior: smooth; }
-.gallery-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-.gallery-card:hover { transform: translateY(-5px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
-.gallery-img { transition: transform 0.5s ease; width:100%; height:100%; object-fit:cover; }
-.gallery-card:hover .gallery-img { transform: scale(1.05); }
-.star-btn { cursor:pointer; font-size:1rem; }
-</style>
-@endpush
-
-@push('scripts')
-<!-- GLightbox JS -->
-<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // GLightbox Init
-    if(typeof GLightbox !== 'undefined'){
-        GLightbox({ selector: '.glightbox' });
-    }
-
-    // Rating AJAX
-    document.querySelectorAll('.rating').forEach(function(ratingEl){
-        ratingEl.querySelectorAll('.star-btn').forEach(function(star){
-            star.addEventListener('click', function(){
-                let value = this.dataset.value;
-                let fotoId = ratingEl.dataset.id;
-
-                fetch(`/home/rating/${fotoId}`,{
-                    method:'POST',
-                    headers:{
-                        'Content-Type':'application/json',
-                        'X-CSRF-TOKEN':'{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({ rating: value })
-                })
-                .then(res=>res.json())
-                .then(data=>{
-                    if(data.average){
-                        let avg = data.average;
-                        ratingEl.querySelector('.avg-rating').innerText = avg.toFixed(2);
-
-                        ratingEl.querySelectorAll('.star-btn').forEach((s, idx)=>{
-                            if(idx < Math.round(avg)){
-                                s.classList.add('text-warning','bi-star-fill');
-                                s.classList.remove('bi-star');
-                            }else{
-                                s.classList.remove('text-warning','bi-star-fill');
-                                s.classList.add('bi-star');
-                            }
-                        });
-                    }
-                }).catch(err=>console.error(err));
-            });
-        });
-    });
-
-    // ✅ Load More AJAX + Scroll ke galeri
-    let offset = {{ $foto->count() }};
-    const loadBtn = document.getElementById('loadMoreBtn');
-    if(loadBtn){
-        loadBtn.addEventListener('click', function(){
-            loadBtn.disabled = true;
-            loadBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Memuat...';
-
-            fetch(`/home/load-more?offset=${offset}`)
-            .then(res=>res.json())
-            .then(data=>{
-                if(data.html){
-                    const container = document.getElementById('galeri-container');
-                    container.insertAdjacentHTML('beforeend', data.html);
-                    offset += data.count;
-
-                    // 🔽 Scroll otomatis ke galeri (biar langsung kelihatan)
-                    document.getElementById('galeri').scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-
-                    if(data.count < 6){
-                        loadBtn.style.display='none';
-                    } else {
-                        loadBtn.disabled = false;
-                        loadBtn.innerHTML = '<i class="bi bi-arrow-down-circle"></i> Load More';
-                    }
-                }
-            })
-            .catch(err=>{
-                console.error(err);
-                loadBtn.disabled = false;
-                loadBtn.innerHTML = '<i class="bi bi-arrow-down-circle"></i> Load More';
-            });
-        });
-    }
-});
-</script>
-@endpush

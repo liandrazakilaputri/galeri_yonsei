@@ -4,40 +4,42 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Foto;
-use App\Models\KomentarHome;
+use App\Models\KomentarHome; // ✅ pakai KomentarHome sesuai keinginan kamu
+use App\Models\Agenda;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
     /**
-     * Tampilkan halaman utama
+     * 🏠 Tampilkan halaman utama
      */
     public function index()
     {
-        // Ambil 6 foto terbaru
-        $foto = Foto::with('kategori')->latest()->take(6)->get();
+        $foto = Foto::latest()->take(6)->get();
+        $komentar = KomentarHome::latest()->take(5)->get(); // ✅ pakai KomentarHome
+        $agendas = Agenda::latest()->take(3)->get();
 
-        // Ambil 5 komentar terbaru
-        $komentar = KomentarHome::latest()->take(5)->get();
+        // Tambahan statistik biar home lebih hidup (opsional)
+        $totalFoto = Foto::count();
+        $totalAgenda = Agenda::count();
+        $totalKomentar = KomentarHome::count();
 
-        return view('user.home', compact('foto', 'komentar'));
+        return view('user.home', compact('foto', 'komentar', 'agendas', 'totalFoto', 'totalAgenda', 'totalKomentar'));
     }
 
     /**
-     * Fungsi untuk load more foto via AJAX
+     * 🔄 Load more foto via AJAX
      */
     public function loadMore(Request $request)
     {
         $offset = $request->get('offset', 0);
 
-        // Ambil 6 foto lagi dari offset tertentu
         $foto = Foto::with('kategori')
                     ->latest()
                     ->skip($offset)
                     ->take(6)
                     ->get();
 
-        // Render tampilan partial untuk setiap foto
         $html = '';
         foreach ($foto as $f) {
             $html .= view('user.partials.foto-card', compact('f'))->render();
@@ -50,7 +52,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Simpan atau update rating
+     * ⭐ Update rating foto
      */
     public function updateRating(Request $request, Foto $foto)
     {
@@ -60,7 +62,6 @@ class HomeController extends Controller
 
         $user_id = Auth::id() ?? 0;
 
-        // Cek apakah user sudah pernah kasih rating
         $existing = $foto->ratings()->where('user_id', $user_id)->first();
         if ($existing) {
             $existing->update(['rating' => $request->rating]);
@@ -71,14 +72,13 @@ class HomeController extends Controller
             ]);
         }
 
-        // Hitung rata-rata rating terbaru
         $average = round($foto->ratings()->avg('rating'), 2);
 
         return response()->json(['average' => $average]);
     }
 
     /**
-     * Simpan komentar dari user
+     * 💬 Simpan komentar dari user
      */
     public function storeKomentar(Request $request)
     {
@@ -87,13 +87,13 @@ class HomeController extends Controller
             'komentar' => 'required|string|max:500',
         ]);
 
-        KomentarHome::create($request->only('nama', 'komentar'));
+        KomentarHome::create($request->only('nama', 'komentar')); // ✅ tetap pakai KomentarHome
 
         return back()->with('success', 'Komentar berhasil dikirim!');
     }
 
     /**
-     * Halaman Tentang
+     * ℹ️ Halaman Tentang
      */
     public function tentang()
     {
