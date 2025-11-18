@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\KomentarHome;
 use App\Models\Rating;
-use App\Models\Foto;
 
 class AdminKomentarController extends Controller
 {

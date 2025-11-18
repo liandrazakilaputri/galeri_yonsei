@@ -4,20 +4,20 @@
 <div class="container mt-4">
     <h2>Edit Foto Galeri</h2>
 
-    <form action="{{ route('admin.galeri.update', $galeri->id) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.galeri.update', $foto->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
         <div class="mb-3">
             <label>Judul</label>
-            <input type="text" name="judul" value="{{ $galeri->judul }}" class="form-control" required>
+            <input type="text" name="judul" value="{{ $foto->judul }}" class="form-control" required>
         </div>
 
         <div class="mb-3">
             <label>Kategori</label>
             <select name="kategori_id" class="form-control" required>
                 @foreach($kategori as $k)
-                    <option value="{{ $k->id }}" {{ $galeri->kategori_id == $k->id ? 'selected' : '' }}>
+                    <option value="{{ $k->id }}" {{ $foto->kategori_id == $k->id ? 'selected' : '' }}>
                         {{ $k->nama }}
                     </option>
                 @endforeach
@@ -26,8 +26,8 @@
 
         <div class="mb-3">
             <label>Gambar Saat Ini</label><br>
-            @if($galeri->gambar)
-                <img src="{{ asset('storage/'.$galeri->gambar) }}" alt="Foto" width="150" class="rounded">
+            @if($foto->gambar)
+                <img src="{{ asset('storage/'.$foto->gambar) }}" alt="Foto" width="150" class="rounded">
             @else
                 <span class="text-muted">Tidak ada gambar</span>
             @endif
@@ -40,7 +40,7 @@
 
         <div class="mb-3">
             <label>Deskripsi</label>
-            <textarea name="deskripsi" class="form-control" rows="3">{{ $galeri->deskripsi }}</textarea>
+            <textarea name="deskripsi" class="form-control" rows="3">{{ $foto->deskripsi }}</textarea>
         </div>
 
         <button type="submit" class="btn btn-primary">Update</button>

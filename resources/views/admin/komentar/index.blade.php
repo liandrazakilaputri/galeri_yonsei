@@ -6,7 +6,7 @@
 
     {{-- Komentar Home --}}
     <div class="card mb-4">
-        <div class="card-header bg-primary text-white">Komentar di Halaman Home</div>
+        <div class="card-header text-white" style="background-color: #195087;">Komentar di Halaman Home</div>
         <div class="card-body">
             <table class="table table-bordered table-striped">
                 <thead>
@@ -18,11 +18,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($komentarHome as $k)
+                    @forelse($komentarHome ?? [] as $k)
                         <tr>
                             <td>{{ $k->nama ?? 'Anonim' }}</td>
-                            <td>{{ $k->komentar }}</td>
-                            <td>{{ $k->created_at->format('d M Y H:i') }}</td>
+                            <td>{{ $k->komentar ?? '-' }}</td>
+                            <td>{{ $k->created_at ? $k->created_at->format('d M Y H:i') : '-' }}</td>
                             <td>
                                 <form action="{{ route('admin.komentar.destroyHome', $k->id) }}" method="POST" onsubmit="return confirm('Yakin hapus komentar ini?')">
                                     @csrf
@@ -41,7 +41,7 @@
 
     {{-- Rating Foto --}}
     <div class="card">
-        <div class="card-header bg-success text-white">Rating Foto</div>
+        <div class="card-header text-white" style="background-color: #195087;">Rating Foto</div>
         <div class="card-body">
             <table class="table table-bordered table-striped">
                 <thead>
@@ -55,13 +55,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($ratings as $r)
+                    @forelse($ratings ?? [] as $r)
                         <tr>
                             <td>{{ $r->nama_user ?? 'Anonim' }}</td>
                             <td>{{ $r->foto->judul ?? '-' }}</td>
-                            <td>⭐ {{ $r->rating }}</td>
-                            <td>{{ $r->komentar }}</td>
-                            <td>{{ $r->created_at->format('d M Y H:i') }}</td>
+                            <td>⭐ {{ $r->rating ?? '-' }}</td>
+                            <td>{{ $r->komentar ?? '-' }}</td>
+                            <td>{{ $r->created_at ? $r->created_at->format('d M Y H:i') : '-' }}</td>
                             <td>
                                 <form action="{{ route('admin.komentar.destroyRating', $r->id) }}" method="POST" onsubmit="return confirm('Yakin hapus rating ini?')">
                                     @csrf

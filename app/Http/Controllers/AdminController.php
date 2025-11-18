@@ -24,7 +24,8 @@ class AdminController extends Controller
         // Komentar terbaru (masih dibatasi 5)
         $recentComments = KomentarHome::latest()->take(5)->get();
 
-        return view('admin.dashboard', compact(
+        // Render view dengan header anti-back
+        $response = response()->view('admin.dashboard', compact(
             'totalFoto',
             'totalKategori',
             'totalAdmin',
@@ -32,5 +33,9 @@ class AdminController extends Controller
             'allFotos',
             'recentComments'
         ));
+
+        return $response->header('Cache-Control','no-cache, no-store, max-age=0, must-revalidate')
+                        ->header('Pragma','no-cache')
+                        ->header('Expires','Sat, 01 Jan 1990 00:00:00 GMT');
     }
 }

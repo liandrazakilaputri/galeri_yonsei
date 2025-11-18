@@ -27,7 +27,7 @@ class AgendaController extends Controller
      */
     public function indexUser()
     {
-        // Hapus otomatis agenda yang tanggalnya sudah lewat
+        // Hapus otomatis agenda kadaluarsa
         Agenda::where('tanggal', '<', Carbon::today())->delete();
 
         // Ambil semua agenda terbaru
@@ -37,7 +37,7 @@ class AgendaController extends Controller
     }
 
     /**
-     * Tampilkan form tambah agenda.
+     * Form tambah agenda.
      */
     public function create()
     {
@@ -45,7 +45,7 @@ class AgendaController extends Controller
     }
 
     /**
-     * Simpan agenda baru ke database.
+     * Simpan agenda baru.
      */
     public function store(Request $request)
     {
@@ -61,11 +61,13 @@ class AgendaController extends Controller
             'deskripsi' => $request->deskripsi,
         ]);
 
-        return redirect()->route('agenda.index')->with('success', 'Agenda berhasil ditambahkan!');
+        // FIX: Jangan redirect ke halaman user (agenda.index)
+        return redirect()->route('admin.agenda.index')
+                         ->with('success', 'Agenda berhasil ditambahkan!');
     }
 
     /**
-     * Tampilkan form edit agenda.
+     * Form edit agenda.
      */
     public function edit($id)
     {
@@ -74,34 +76,38 @@ class AgendaController extends Controller
     }
 
     /**
-     * Update agenda yang sudah ada.
+     * Update agenda.
      */
     public function update(Request $request, $id)
     {
         $request->validate([
-            'judul' => 'required|string|max:255',
-            'tanggal' => 'required|date',
-            'deskripsi' => 'required|string',
+            'judul'      => 'required|string|max:255',
+            'tanggal'    => 'required|date',
+            'deskripsi'  => 'required|string',
         ]);
 
         $agenda = Agenda::findOrFail($id);
         $agenda->update([
-            'judul' => $request->judul,
-            'tanggal' => $request->tanggal,
+            'judul'     => $request->judul,
+            'tanggal'   => $request->tanggal,
             'deskripsi' => $request->deskripsi,
         ]);
 
-        return redirect()->route('agenda.index')->with('success', 'Agenda berhasil diperbarui!');
+        // FIX: Redirect ke halaman admin, bukan user
+        return redirect()->route('admin.agenda.index')
+                         ->with('success', 'Agenda berhasil diperbarui!');
     }
 
     /**
-     * Hapus agenda secara manual (jika admin mau hapus sendiri).
+     * Hapus agenda.
      */
     public function destroy($id)
     {
         $agenda = Agenda::findOrFail($id);
         $agenda->delete();
 
-        return redirect()->route('agenda.index')->with('success', 'Agenda berhasil dihapus!');
+        // FIX: Redirect ke halaman admin, bukan user
+        return redirect()->route('admin.agenda.index')
+                         ->with('success', 'Agenda berhasil dihapus!');
     }
 }

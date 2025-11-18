@@ -11,9 +11,9 @@ use App\Http\Controllers\AdminKomentarController;
 use App\Http\Controllers\AgendaController;
 
 /*
-|--------------------------------------------------------------------------
+|---------------------------------------------------------------------------
 | ROUTE UNTUK USER (PUBLIC)
-|--------------------------------------------------------------------------
+|---------------------------------------------------------------------------
 */
 
 // Halaman utama
@@ -45,21 +45,19 @@ Route::get('/galeri/{foto}/download', [FotoController::class, 'download'])->name
 // Update rating via AJAX tanpa login
 Route::post('/home/rating/{foto}', [HomeController::class, 'updateRating'])->name('home.rating.update');
 
-
 /*
-|--------------------------------------------------------------------------
+|---------------------------------------------------------------------------
 | LOGIN / LOGOUT ADMIN
-|--------------------------------------------------------------------------
+|---------------------------------------------------------------------------
 */
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login.form');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
-
 /*
-|--------------------------------------------------------------------------
+|---------------------------------------------------------------------------
 | ROUTE ADMIN (HARUS LOGIN)
-|--------------------------------------------------------------------------
+|---------------------------------------------------------------------------
 */
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function() {
 
@@ -78,7 +76,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function() {
 
     // Komentar & Rating
     Route::get('/komentar', [AdminKomentarController::class, 'index'])->name('komentar.index');
-    Route::delete('/komentar/home/{id}', [AdminKomentarController::class, 'destroyHome'])->name('komentar.destroyHome');
+    Route::delete('/komentar/home/{id}', [AdminKomentarController::class, 'destroyKomentarHome'])->name('komentar.destroyHome');
     Route::delete('/komentar/rating/{id}', [AdminKomentarController::class, 'destroyRating'])->name('komentar.destroyRating');
 
     // CRUD Kategori

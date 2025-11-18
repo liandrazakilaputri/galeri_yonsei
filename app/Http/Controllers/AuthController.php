@@ -18,16 +18,17 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            // arahkan ke dashboard admin
             return redirect()->route('admin.dashboard');
         }
 
         return back()->withErrors(['username' => 'Username atau password salah']);
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect()->route('login.form');
     }
 }
